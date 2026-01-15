@@ -1,13 +1,20 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { CitiesService } from './cities.service';
+import { DishService } from 'src/dish/dish.service';
 
 @Controller('cities')
 export class CitiesController {
-  constructor(private readonly citiesService: CitiesService) {}
+  constructor(private readonly citiesService: CitiesService,
+    private readonly dishService: DishService,) {}
 
   @Get(':slug/restaurants')
   getRestaurantsByCity(@Param('slug') slug: string) {
     return this.citiesService.getRestaurantsByCitySlug(slug);
+  }
+
+  @Get('restaurants/:restaurantId/dishes')
+  getDishesByRestaurant(@Param('restaurantId') restaurantId: string) {
+    return this.dishService.findByRestaurant(restaurantId);
   }
 
   @Get(':slug/dishes')

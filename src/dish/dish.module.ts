@@ -8,5 +8,6 @@ import { AuthModule } from 'src/auth/auth.module';
   imports: [PrismaModule, AuthModule],
   controllers: [DishController],
   providers: [DishService],
+  exports: [DishService],
 })
-export class DishModule {}
+export class DishModule { }
