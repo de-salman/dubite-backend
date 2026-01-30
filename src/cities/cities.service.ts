@@ -89,7 +89,13 @@ export class CitiesService {
             city: true,
           },
         },
-        category: true,
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
         stats: true,
       },
       orderBy: {
@@ -98,7 +104,7 @@ export class CitiesService {
     });
 
     // Sort by stats.score and avg_rating if available
-    return dishes.sort((a, b) => {
+    const sortedDishes = dishes.sort((a, b) => {
       const scoreA = a.stats?.score ?? 0;
       const scoreB = b.stats?.score ?? 0;
       if (scoreA !== scoreB) {
@@ -111,6 +117,12 @@ export class CitiesService {
       }
       return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
     });
+
+    // Add rank to each dish (similar to getBestDishes)
+    return sortedDishes.map((dish, index) => ({
+      ...dish,
+      rank: index + 1,
+    }));
   }
 
   async getCuisineRanking(citySlug: string, cuisineType: string) {
@@ -301,6 +313,26 @@ export class CitiesService {
     }
 
     return Array.from(cuisineMap.values());
+  }
+
+  async getCityBySlug(slug: string) {
+    const city = await this.prisma.city.findUnique({
+      where: { slug },
+    });
+
+    if (!city) {
+      throw new NotFoundException('City not found');
+    }
+
+    return city;
+  }
+
+  async getAllCities() {
+    return this.prisma.city.findMany({
+      orderBy: {
+        name: 'asc',
+      },
+    });
   }
 
   async getBestDishes(citySlug: string) {

@@ -7,6 +7,11 @@ export class CitiesController {
   constructor(private readonly citiesService: CitiesService,
     private readonly dishService: DishService,) {}
 
+  @Get()
+  getAllCities() {
+    return this.citiesService.getAllCities();
+  }
+
   @Get(':slug/restaurants')
   getRestaurantsByCity(@Param('slug') slug: string) {
     return this.citiesService.getRestaurantsByCitySlug(slug);
@@ -46,5 +51,10 @@ export class CitiesController {
   @Get(':slug/best-dishes')
   getBestDishes(@Param('slug') slug: string) {
     return this.citiesService.getBestDishes(slug);
+  }
+
+  @Get(':slug')
+  getCityBySlug(@Param('slug') slug: string) {
+    return this.citiesService.getCityBySlug(slug);
   }
 }
