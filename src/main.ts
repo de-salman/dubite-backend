@@ -1,3 +1,4 @@
+import '@nestjs/core'; // So Nest CLI detects this as the Nest entrypoint
 import { AppFactory } from './AppFactory';
 
 async function bootstrap() {
